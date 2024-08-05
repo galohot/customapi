@@ -18,7 +18,6 @@
         <fields name="params">
             <fieldset name="basic">
                 <field name="api_key" type="text" label="PLG_SYSTEM_CUSTOMAPI_FIELD_API_KEY_LABEL" description="PLG_SYSTEM_CUSTOMAPI_FIELD_API_KEY_DESC"/>
-                <field name="table_name" type="text" label="PLG_SYSTEM_CUSTOMAPI_FIELD_TABLE_NAME_LABEL" description="PLG_SYSTEM_CUSTOMAPI_FIELD_TABLE_NAME_DESC"/>
             </fieldset>
         </fields>
     </config>
