@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>PLG_SYSTEM_CUSTOMAPI</name>
+    <version>1.0.0</version>
+    <author>Dedi Irawan</author>
+    <creationDate>2024-08-02</creationDate>
+    <copyright>Copyright (C) 2024 Dedi Irawan</copyright>
+    <license>no license</license>
+    <description>PLG_SYSTEM_CUSTOMAPI_DESC</description>
+    <files>
+        <filename plugin="customapi">customapi.php</filename>
+        <folder>helpers</folder>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.plg_system_customapi.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="api_key" type="text" label="PLG_SYSTEM_CUSTOMAPI_FIELD_API_KEY_LABEL" description="PLG_SYSTEM_CUSTOMAPI_FIELD_API_KEY_DESC"/>
+                <field name="table_name" type="text" label="PLG_SYSTEM_CUSTOMAPI_FIELD_TABLE_NAME_LABEL" description="PLG_SYSTEM_CUSTOMAPI_FIELD_TABLE_NAME_DESC"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
