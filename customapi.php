@@ -112,13 +112,14 @@ class PlgSystemCustomapi extends CMSPlugin
 
     private function outputJson($data, $error = null)
     {
+        header('Content-Type: application/json; charset=utf-8');
         if ($error)
         {
-            echo json_encode(['error' => $error]);
+            echo json_encode(['error' => $error], JSON_PRETTY_PRINT);
         }
         else
         {
-            echo json_encode($data);
+            echo json_encode($data, JSON_PRETTY_PRINT);
         }
     }
 }
