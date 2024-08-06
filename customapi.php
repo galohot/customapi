@@ -13,6 +13,22 @@ class PlgSystemCustomapi extends CMSPlugin
 {
     protected $app;
 
+    private $fileFields = ['photo', 'passport_file', 'other_document1', 'other_document2', 'other_document3'];
+    private $filePaths = [
+        'tbl_reg_delegate_v1' => '/var/www/html/abc_files/country/',
+        'tbl_reg_honorary_v1' => '/var/www/html/abc_files/honorary/',
+        'tbl_reg_business_v1' => '/var/www/html/abc_files/business/',
+        'tbl_reg_general_v1' => '/var/www/html/abc_files/general/'
+    ];
+
+    private $fileSubPaths = [
+        'photo' => 'photo/',
+        'passport_file' => 'passport/',
+        'other_document1' => 'other1/',
+        'other_document2' => 'other2/',
+        'other_document3' => 'other3/'
+    ];
+
     public function onAfterInitialise()
     {
         $input = Factory::getApplication()->input;
@@ -22,9 +38,9 @@ class PlgSystemCustomapi extends CMSPlugin
         if ($option === 'com_customapi')
         {
             $providedApiKey = $input->get('api_key', '', 'string');
-            $tableName = $input->get('table', '', 'string'); // Get the table name from URL parameters
-            $fields = $input->get('fields', '*', 'string'); // Get the fields from URL parameters, default to '*'
-            $format = $input->get('format', 'json', 'string'); // Get the response format from URL parameters (default to json)
+            $tableName = $input->get('table', '', 'string');
+            $fields = $input->get('fields', '*', 'string');
+            $format = $input->get('format', 'json', 'string');
 
             if ($apiKey !== $providedApiKey)
             {
@@ -43,7 +59,6 @@ class PlgSystemCustomapi extends CMSPlugin
                 $db = Factory::getDbo();
 
                 if ($fields === '*') {
-                    // Fetch all columns if fields is '*'
                     $columnsQuery = $db->getQuery(true)
                         ->select('COLUMN_NAME')
                         ->from('INFORMATION_SCHEMA.COLUMNS')
@@ -62,6 +77,9 @@ class PlgSystemCustomapi extends CMSPlugin
                 $db->setQuery($query);
                 $results = $db->loadAssocList();
 
+                // Process the results to append URLs to file fields
+                $results = $this->processFileFields($results, $tableName);
+
                 $this->outputResponse($results, null, $format);
             }
             catch (Exception $e)
@@ -71,6 +89,26 @@ class PlgSystemCustomapi extends CMSPlugin
 
             Factory::getApplication()->close();
         }
+    }
+
+    private function processFileFields($results, $tableName)
+    {
+        if (isset($this->filePaths[$tableName]))
+        {
+            $basePath = $this->filePaths[$tableName];
+            foreach ($results as &$row)
+            {
+                foreach ($this->fileFields as $field)
+                {
+                    if (isset($row[$field]) && !empty($row[$field]))
+                    {
+                        $subPath = isset($this->fileSubPaths[$field]) ? $this->fileSubPaths[$field] : '';
+                        $row[$field] = 'https://iaf.kemlu.go.id' . str_replace('/var/www/html', '', $basePath . $subPath . $row[$field]);
+                    }
+                }
+            }
+        }
+        return $results;
     }
 
     private function outputResponse($data, $error = null, $format = 'json')
